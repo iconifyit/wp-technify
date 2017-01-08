@@ -28,9 +28,7 @@
 .technify-ops .ops li a {
     display: inline-block;
 }
-.technify-ops textarea {
-    width: 100%;
-}
+
 .technify-ops .form-label {
     float: none;
     width: 200px;
@@ -41,6 +39,7 @@
     font-weight: bold;
     font-size: 1em;
 }
+
 .technify-ops .form-option {
     float: none;
     display: block;

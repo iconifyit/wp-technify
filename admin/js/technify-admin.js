@@ -1,1 +1,0 @@
-/** Technify Admin scripts */

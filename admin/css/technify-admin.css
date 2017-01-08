@@ -2,3 +2,46 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+.settings-table {
+
+    width: 100%;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+}
+
+.settings-table tr {
+
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+}
+
+.settings-table th,
+.settings-table td {
+
+    vertical-align: top;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+.technify-ops .ops li,
+.technify-ops .ops li a {
+    display: inline-block;
+}
+.technify-ops textarea {
+    width: 100%;
+}
+.technify-ops .form-label {
+    float: none;
+    width: 200px;
+    color: #666;
+    padding-right: 20px;
+    padding-top: 0;
+    display: block;
+    font-weight: bold;
+    font-size: 1em;
+}
+.technify-ops .form-option {
+    float: none;
+    display: block;
+}

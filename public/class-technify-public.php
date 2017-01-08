@@ -40,6 +40,18 @@ class Technify_Public {
 	 */
 	private $version;
 
+    /**
+     * Whether or not CSS aggregation & minification is enabled.
+     * @var bool
+     */
+	public $css_enabled;
+
+    /**
+     * Whether or not JS aggregation & minification is enabled.
+     * @var bool
+     */
+	public $js_enabled;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -52,6 +64,19 @@ class Technify_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		$options = get_option( $this->plugin_name );
+
+		$this->css_enabled = false;
+		if ( Tools::get( $options, 'css_enabled', 0 ) == 1 ) {
+		    $this->css_enabled = true;
+        }
+
+        $this->js_enabled = false;
+        if ( Tools::get( $options, 'js_enabled', 0 ) == 1 ) {
+            $this->js_enabled = true;
+        }
+
+        # Tools::debug( $this );
 	}
 
 	/**
@@ -61,21 +86,32 @@ class Technify_Public {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Technify_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Technify_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/technify-public.css', array(), $this->version, 'all' );
-
+		if ( $this->css_enabled ) {
+            wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/technify-public.css', array(), $this->version, 'all' );
+            wp_enqueue_style( $this->plugin_name . '-styles-all' , plugin_dir_url( __FILE__ ) . 'css/styles-all.php', array(), null, 'all' );
+            add_action( 'wp_print_styles', array( $this, 'dequeue_styles' ) );
+        }
 	}
+
+	public function dequeue_styles() {
+
+        global $wp_styles;
+
+        $Compressor = Compressor::singleton();
+
+	    $unload =  array_values($Compressor->get_styles('minify'));
+        $unload =  array_merge( $unload, array_values($Compressor->get_styles('aggregate')) );
+
+        foreach ( $wp_styles->registered as $style ) {
+
+            $url = wp_parse_url( $style->src );
+            $path = Tools::get( $url, 'path' );
+            if ( in_array( $path, $unload )) {
+                wp_dequeue_style( $style->handle );
+                wp_deregister_style( $style->handle );
+            }
+        }
+    }
 
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
@@ -84,20 +120,30 @@ class Technify_Public {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Technify_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Technify_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-public.js', array( 'jquery' ), $this->version, false );
-
+		if ( $this->js_enabled ) {
+            wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-public.js', array( 'jquery' ), $this->version, false );
+            wp_enqueue_script( $this->plugin_name . '-scripts-all', plugin_dir_url( __FILE__ ) . 'js/scripts-all.php', array(), null, false );
+            add_action( 'wp_print_scripts', array( $this, 'dequeue_scripts' ) );
+        }
 	}
 
+    public function dequeue_scripts() {
+
+        global $wp_scripts;
+
+        $Compressor = Compressor::singleton();
+
+        $unload =  array_values($Compressor->get_scripts('minify'));
+        $unload =  array_merge( $unload, array_values($Compressor->get_scripts('aggregate')) );
+
+        foreach ( $wp_scripts->registered as $style ) {
+
+            $url = wp_parse_url( $style->src );
+            $path = Tools::get( $url, 'path' );
+            if ( in_array( $path, $unload )) {
+                wp_dequeue_script( $style->handle );
+                wp_deregister_script( $style->handle );
+            }
+        }
+    }
 }

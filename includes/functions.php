@@ -13,8 +13,8 @@
  * See COPYING.txt for copyright notices and details.
  */
 
-require_once('Filter.php'); 
-require_once('JavaScriptPacker.php');
+# require_once('Filter.php');
+# require_once('JavaScriptPacker.php');
 
 /**
  * Retrieves a variable from an object or array. This is just a wrapper function for Filter::get().
@@ -40,7 +40,7 @@ function do_read_file($file) {
     if (! is_readable($file)) return null;
     $str = "";
     $fp = fopen($file, 'r');
-    if (!$fp) return false;
+    if (! $fp) return null;
     if (filesize($file) > 0) {
         $str = fread($fp, filesize($file));
     }

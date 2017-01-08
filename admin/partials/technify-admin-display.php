@@ -1,101 +1,116 @@
 <?php
-
 /**
- * Provide a admin area view for the plugin
- *
- * This file is used to markup the admin-facing aspects of the plugin.
- *
  * @link       https://vectoricons.net
  * @since      1.0.0
  *
  * @package    Technify
  * @subpackage Technify/admin/partials
  */
-?>
-<?php
 
-$staging    = "http://iconify.staging.wpengine.com";
-$production = bloginfo( 'url' );
-die($production);
-$the_theme  = "iconify-too";
-$js_app     = "js-compressor.php";
-$css_app    = "css-compressor.php";
-
-
+$options       = get_option( $this->plugin_name );
+$css_aggregate = Tools::get( $options, 'css_aggregate' );
+$css_minify    = Tools::get( $options, 'css_minify' );
+$js_aggregate  = Tools::get( $options, 'js_aggregate' );
+$js_minify     = Tools::get( $options, 'js_minify' );
+$css_enabled   = Tools::get( $options, 'css_enabled', 0 );
+$js_enabled    = Tools::get( $options, 'js_enabled', 0 );
 
 ?>
-<html>
-<head>
-    <style>
-        * { font-family: Helvetica, sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-weight: bold; }
-        h1 { font-size: 1em; text-transform: uppercase; }
-        .wrapper { width: 960px; margin: 50px auto; }
-        .ops li, .ops li a {
-            display: inline-block;
-            width: 256px;
-            height: 80px;
-        }
-        .ops li { margin-right: 10px; }
-        .ops li a {
+<div class="wrap">
+    <div id="poststuff" class="clear">
+        <div id="post-body" class="metabox-holder">
+            <div id="post-body-content">
+                <div class="meta-box-sortables ui-sortable">
+                    <div class="postbox">
+                        <h2 class="hndle ui-sortable-handle"><span><?php echo esc_html(get_admin_page_title()); ?></span></h2>
+                        <div class="inside">
+                            <div class="technify-ops wrapper">
+                                <ul class="ops" data-environment="production">
+                                    <li><a href="#compress-js" data-action='compress_js' class="compress-js technify-compressor button button-primary">Compress JS</a></li>
+                                    <li><a href="#compress-css" data-action='compress_css' class="compress-css technify-compressor button button-primary">Compress CSS</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="meta-box-sortables ui-sortable">
+                    <div class="postbox">
+                        <h2 class="hndle ui-sortable-handle"><span><?php esc_attr_e('Purge Cache', $this->plugin_name); ?></span></h2>
+                        <div class="inside">
 
-            border: 1px solid #000;
-            line-height: 80px;
-            text-align: center;
-            text-decoration: none;
-            font-family: Helvetica, sans-serif;
-            font-weight: bold;
-            color: #666;
-        }
-        :focus, :active, :visited { color: #666; }
-    </style>
-</head>
-<body>
-<div class="wrapper">
-    <h1>Staging</h1>
-    <ul class="ops" data-environment="staging">
-        <li><a href="<?php echo $staging; ?>/wp-content/themes/<?php echo $the_theme; ?>/js/<?php echo $js_app; ?>">JavaScript Compressor</a></li>
-        <li><a href="<?php echo $staging; ?>/wp-content/themes/<?php echo $the_theme; ?>/css/<?php echo $css_app; ?>">CSS Compressor</a></li>
-    </ul>
-    <h1>Production</h1>
-    <ul class="ops" data-environment="production">
-        <li><a href="<?php echo $production; ?>/wp-content/themes/<?php echo $the_theme; ?>/js/<?php echo $js_app; ?>">JavaScript Compressor</a></li>
-        <li><a href="<?php echo $production; ?>/wp-content/themes/<?php echo $the_theme; ?>/css/<?php echo $css_app; ?>">CSS Compressor</a></li>
-    </ul>
+                            <div class="technify-ops wrapper">
+                                <form method="post" name="<?php echo $this->plugin_name; ?>" action="options.php">
+                                    <input type="hidden" name="technify-nonce" id="technify-nonce" value="<?php echo wp_create_nonce( 'technify-nonce' ); ?>" />
+                                    <?php
+                                        settings_fields( $this->plugin_name );
+                                        do_settings_sections( $this->plugin_name );
+                                    ?>
+                                    <section>
+                                        <div class="form-row">
+                                            <label class="form-label" for="<?php echo $this->plugin_name; ?>-css-enabled">
+                                                <?php esc_attr_e('Optimize CSS', $this->plugin_name); ?>
+                                            </label>
+                                            <div class="form-option">
+                                                <legend class="screen-reader-text"><span><?php _e('Enable CSS Optimization', $this->plugin_name); ?></span></legend>
+                                                <input type="radio" name="<?php echo $this->plugin_name; ?>[css_enabled]" value="1" <?php if ($css_enabled ==  1) : ?>checked="checked"<?php endif; ?> />&nbsp;Yes
+                                                <input type="radio" name="<?php echo $this->plugin_name; ?>[css_enabled]" value="0" <?php if ($css_enabled ==  0) : ?>checked="checked"<?php endif; ?> />&nbsp;No
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <h3><?php esc_attr_e('CSS Aggregate', $this->plugin_name); ?></h3>
+                                            <div class="form-option">
+                                                <textarea rows="10" cols="150" name="<?php echo $this->plugin_name; ?>[css_aggregate]"><?php echo $css_aggregate; ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <h3><?php esc_attr_e('CSS Minify', $this->plugin_name); ?></h3>
+                                            <div class="form-option">
+                                                <textarea rows="10" cols="150" name="<?php echo $this->plugin_name; ?>[css_minify]"><?php echo $css_minify; ?></textarea>
+                                            </div>
+                                        </div>
+                                    </section>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="meta-box-sortables ui-sortable">
+                        <div class="postbox">
+                            <h2 class="hndle ui-sortable-handle"><span><?php esc_attr_e('Purge Cache', $this->plugin_name); ?></span></h2>
+                            <div class="inside">
+                                    <section>
+                                        <div class="form-row">
+                                            <label class="form-label" for="<?php echo $this->plugin_name; ?>-js-enabled">
+                                                <?php esc_attr_e('Optimize JS', $this->plugin_name); ?>
+                                            </label>
+                                            <div class="form-option">
+                                                <legend class="screen-reader-text"><span><?php _e('Enable JS Optimization', $this->plugin_name); ?></span></legend>
+                                                <input type="radio" name="<?php echo $this->plugin_name; ?>[js_enabled]" value="1" <?php if ($js_enabled ==  1) : ?>checked="checked"<?php endif; ?> />&nbsp;Yes
+                                                <input type="radio" name="<?php echo $this->plugin_name; ?>[js_enabled]" value="0" <?php if ($js_enabled ==  0) : ?>checked="checked"<?php endif; ?> />&nbsp;No
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <h3><?php esc_attr_e('JS Aggregate', $this->plugin_name); ?></h3>
+                                            <div class="form-option">
+                                                <textarea rows="10" cols="150" name="<?php echo $this->plugin_name; ?>[js_aggregate]"><?php echo $js_aggregate; ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <h3><?php esc_attr_e('JS Minify', $this->plugin_name); ?></h3>
+                                            <div class="form-option">
+                                                <textarea rows="10" cols="150" name="<?php echo $this->plugin_name; ?>[js_minify]"><?php echo $js_minify; ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-option">
+                                                <?php submit_button('Save', 'primary','submit', TRUE); ?>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script>
-    ;(function($) {
-        $(function() {
-            $(".ops").each(function() {
-                var $ops = $(this);
-                $("a", $ops).on("click", function(e) {
-
-                    e.preventDefault();
-
-                    var $op = $(this);
-
-                    $("#covert-op, #op-alert").remove();
-                    $("body").append(
-                        '<iframe id="covert-op" src="' + $op.attr("href") + '" style="display: none;"></iframe>'
-                    );
-                    var $covert = $("#covert-op");
-                    $covert.load(function() {
-                        $covert.remove();
-                        $(".wrapper").prepend(
-                            '<h1 id="op-alert">' + $op.text() + ' in ' + $ops.data('environment') + ' successfully run</h1>'
-                        );
-                        var $alert = $("#op-alert");
-                        setTimeout(function() {
-                            $alert.fadeOut(200, function() {
-                                $alert.remove();
-                            });
-                        }, 5000);
-                    });
-                });
-            });
-        });
-    })(jQuery);
-</script>
-</body>
-</html>

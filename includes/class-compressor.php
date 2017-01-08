@@ -424,7 +424,7 @@ class Compressor {
     public function js() {
 
         $this->header_js();
-        echo "/* Technify-generated scripts */\n";
+        echo "/* Technify-generated scripts " . date("D M j G:i:s T Y") . " */\n";
         echo $this->get_code( TECH_SCRIPTS_KEY );
     }
 
@@ -434,7 +434,7 @@ class Compressor {
     public function css() {
 
         $this->header_css();
-        echo "/* Technify-generated styles */\n";
+        echo "/* Technify-generated styles " . date("D M j G:i:s T Y") . "*/\n";
         echo $this->get_code( TECH_STYLES_KEY );
     }
 }

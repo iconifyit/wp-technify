@@ -85,7 +85,6 @@ class Technify_Public {
 	public function enqueue_styles() {
 
 		if ( $this->css_enabled ) {
-            wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/technify-public.css', array(), $this->version, 'all' );
             wp_enqueue_style( $this->plugin_name . '-styles-all' , plugin_dir_url( __FILE__ ) . 'css/styles-all.php', array(), null, 'all' );
             add_action( 'wp_print_styles', array( $this, 'dequeue_styles' ) );
         }
@@ -119,7 +118,6 @@ class Technify_Public {
 	public function enqueue_scripts() {
 
 		if ( $this->js_enabled ) {
-            wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-public.js', array( 'jquery' ), $this->version, false );
             wp_enqueue_script( $this->plugin_name . '-scripts-all', plugin_dir_url( __FILE__ ) . 'js/scripts-all.php', array(), null, false );
             add_action( 'wp_print_scripts', array( $this, 'dequeue_scripts' ) );
         }

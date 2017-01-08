@@ -6,13 +6,13 @@
  * @author     Scott Lewis <scott@vectoricons.net>
  */
 
-$compressor_file = @$_SERVER['CONTEXT_DOCUMENT_ROOT'] . "/wp-content/plugins/technify/includes/compressor-base.php";
+$folders         = explode('/', dirname( __FILE__ ));
+$plugin_dir_name = $folders[count($folders)-3];
+$compressor_file = @$_SERVER['CONTEXT_DOCUMENT_ROOT'] . "/wp-content/plugins/{$plugin_dir_name}/includes/compressor-base.php";
 
 if ( file_exists( $compressor_file ) ) {
     require_once( $compressor_file );
-
+    $Compressor = Compressor::singleton();
     $Compressor->js();
 }
 exit(0);
-
-

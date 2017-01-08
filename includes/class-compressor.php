@@ -178,11 +178,19 @@ class Compressor {
         $this->process( 'scripts' );
     }
 
-    private function direct_path( $file, $asset ) {
-
-        return get_bloginfo('url') . '/' . dirname($file) . '/' . str_replace( array("'", '"'), "", $asset );
+    /**
+     * Process JS & CSS files
+     */
+    public function process_all() {
+        Tools::debug( $this );
+        $this->process_css();
+        $this->process_js();
     }
 
+    /**
+     * For debugging ajax calls.
+     * @param $what
+     */
     private function debug( $what ) {
         echo json_encode(array(
             'text' => json_encode($what),

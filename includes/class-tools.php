@@ -109,6 +109,41 @@ class Tools {
     }
 
     /**
+     * Writes the provided string data to the specified file
+     * @param string  The file to write
+     * @param string  The string contents of the file
+     * @param string  The file mode
+     * @return bool   Whether or not the file was written
+     */
+    function write_file($file, $str, $mode='FILE_APPEND') {
+        if (! file_exists($file)) return false;
+        return file_put_contents( $file, $str ,FILE_APPEND );
+//        $fp = fopen($file, $mode);
+//        if (!$fp) return false;
+//        if (!fwrite($fp, $str)) return false;
+//        fclose($fp);
+//        return true;
+    }
+
+    /**
+     * Reads the contents of a file
+     * @param string  The file to read
+     * @return string The file contents
+     */
+    function read_file($file) {
+        if (is_dir($file)) return null;
+        if (! file_exists($file)) return null;
+        return file_get_contents( $file );
+//        $str = "";
+//        $fp = fopen($file, 'r');
+//        if (!$fp) return false;
+//        if (filesize($file) > 0) {
+//            $str = fread($fp, filesize($file));
+//        }
+//        return $str;
+    }
+
+    /**
      * Filter the entire dataset of iconsets searching for
      * specific iconset_ids.
      * @param array $iconsets The whole dataset

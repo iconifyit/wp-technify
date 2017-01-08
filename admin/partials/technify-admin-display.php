@@ -40,11 +40,12 @@ $js_enabled    = Tools::get( $options, 'js_enabled', 0 );
 
                             <div class="technify-ops wrapper">
                                 <form method="post" name="<?php echo $this->plugin_name; ?>" action="options.php">
-                                    <input type="hidden" name="technify-nonce" id="technify-nonce" value="<?php echo wp_create_nonce( 'technify-nonce' ); ?>" />
+                                    <input type="hidden" name="technify-nonce" id="technify-nonce" value="<?php echo wp_create_nonce( 'technify_settings' ); ?>" />
                                     <?php
                                         settings_fields( $this->plugin_name );
                                         do_settings_sections( $this->plugin_name );
                                     ?>
+                                    <?php /* <input type="hidden" name="action" id="action_technify_settings" value="<?php echo $this->plugin_name; ?>_settings" /> */ ?>
                                     <section>
                                         <div class="form-row">
                                             <label class="form-label" for="<?php echo $this->plugin_name; ?>-css-enabled">

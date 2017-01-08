@@ -168,18 +168,14 @@ class Compressor {
      * The public interface for aggregating and compressing CSS code.
      */
     public function process_css() {
-        if ( $this->css_enabled ) {
-            $this->process( 'styles' );
-        }
+        $this->process( 'styles' );
     }
 
     /**
      * The public interface for aggregating and compressing JS code.
      */
     public function process_js() {
-        if ( $this->js_enabled ) {
-            $this->process( 'scripts' );
-        }
+        $this->process( 'scripts' );
     }
 
     private function direct_path( $file, $asset ) {

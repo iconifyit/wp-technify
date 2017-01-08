@@ -70,7 +70,7 @@ class Technify_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-admin.js', array( 'jquery' ), $this->version, false );
+		# wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-admin.js', array( 'jquery' ), $this->version, false );
         wp_enqueue_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/technify-ajax.js', array( 'jquery' ) );
         wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => '' ) );
 	}

@@ -6,13 +6,13 @@
  * @author     Scott Lewis <scott@vectoricons.net>
  */
 
-$folders         = explode('/', dirname( __FILE__ ));
-$plugin_dir_name = $folders[count($folders)-3];
-$compressor_file = @$_SERVER['CONTEXT_DOCUMENT_ROOT'] . "/wp-content/plugins/{$plugin_dir_name}/includes/compressor-base.php";
+try {
+    $folders         = explode( '/', dirname( __FILE__ ) );
+    $plugin_dir      = implode( '/', array_slice( $folders, 0, -2 ) );
 
-if ( file_exists( $compressor_file ) ) {
-    require_once( $compressor_file );
+    require_once( $plugin_dir . "/includes/compressor-base.php" );
     $Compressor = Compressor::singleton();
     $Compressor->css();
 }
+catch(Exception $e) {/* Fail gracefully */}
 exit(0);

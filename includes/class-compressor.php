@@ -183,6 +183,14 @@ class Compressor {
         return get_bloginfo('url') . '/' . dirname($file) . '/' . str_replace( array("'", '"'), "", $asset );
     }
 
+    private function debug( $what ) {
+        echo json_encode(array(
+            'text' => json_encode($what),
+            'class' => 'notice-info'
+        ));
+        exit(0);
+    }
+
     /**
      * @param string $output    The output from the a CSS or JS file.
      * @return string           The new output
@@ -196,7 +204,7 @@ class Compressor {
          * ../ (dot dot slash)  = replace with directory above path to the file
          */
 
-        $pattern = '|url\s*\(\s*[\'"]?([^\'"\)]+)[\'"]\s*\)|';
+        $pattern = '|url\s*\(([^\)]+)\)|';
 
         $matches = array();
         preg_match_all( $pattern, $output, $matches );
@@ -250,15 +258,18 @@ class Compressor {
             try {
                 foreach ( $this->operations as $op ) {
 
-                    $files = Tools::get( $this->$type, $op, array() );
-
-                    $files = array_map( 'trim', $files );
+                    $files = array_map(
+                        'trim',
+                        Tools::get( $this->$type, $op, array() )
+                    );
 
                     foreach ( $files as $file ) {
 
                         if ( empty($file) ) continue;
 
                         $output = $this->read_file( ABSPATH . $file );
+
+                        if ( trim($output) == '' ) continue;
 
                         if ( $type == 'styles' ) {
                             $output = $this->parse_urls( $file, $output );
@@ -424,7 +435,7 @@ class Compressor {
     public function js() {
 
         $this->header_js();
-        echo "/* Technify-generated scripts " . date("D M j G:i:s T Y") . " */\n";
+        echo "/* Technify-generated scripts - " . date("D M j G:i:s T Y") . " */\n";
         echo $this->get_code( TECH_SCRIPTS_KEY );
     }
 
@@ -434,7 +445,7 @@ class Compressor {
     public function css() {
 
         $this->header_css();
-        echo "/* Technify-generated styles " . date("D M j G:i:s T Y") . "*/\n";
+        echo "/* Technify-generated styles - " . date("D M j G:i:s T Y") . " */\n";
         echo $this->get_code( TECH_STYLES_KEY );
     }
 }

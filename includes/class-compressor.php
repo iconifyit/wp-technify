@@ -118,7 +118,7 @@ class Compressor {
             $this->scripts[$op] = $this->get_paths( Tools::get( $scripts, $op, array() ) );
         }
 
-        $options = get_option( $this->plugin_name );
+        $options = get_option( 'Technify' );
 
         $this->css_enabled = false;
         if ( Tools::get( $options, 'css_enabled', 0 ) == 1 ) {

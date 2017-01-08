@@ -22,17 +22,51 @@
 
                 response = JSON.parse(response);
 
+                if (response.class == 'notice-sucess')
+
                 console.log( response );
 
-                var $notice = $("div.notice");
+                $("#technify-notice").remove();
 
-                $('p', $notice).text( response.text );
-                $notice.removeClass('notice-success');
-                $notice.removeClass('notice-error');
-                $notice.addClass( response.class );
+                var $container = $("#technify-wrap");
 
+                // id="setting-error-settings_updated" class="updated settings-error notice is-dismissible"
+
+                var $notice = $("<div/>");
+                $notice.attr('id', 'technify-notice');
+                $notice.addClass('notice');
+                $notice.addClass('updated');
+                $notice.addClass('settings-error');
+                $notice.addClass('is-dismissible');
+                $notice.addClass(response.class);
+                var $p = $('<p/>').append($('<strong/>').text(response.text));
+                $notice.append($p);
+                var $button = $('<button/>');
+                $button.attr('type', 'button');
+                $button.addClass('notice-dismiss');
+                $button.append($('<span/>').addClass('screen-reader-text').text('Dismiss this notice.'));
+                $notice.append($button);
+                $container.prepend($notice);
+
+                var $notice = $("#technify-notice");
+                var $button = $('button', $notice);
+                $button.on('click', function(e) {
+                    e.preventDefault();
+                    $notice.fadeOut('200', function() {
+                        $notice.remove();
+                    });
+                });
             });
         });
     });
 
 })( jQuery );
+
+/*
+ <div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
+    <p><strong>Settings saved.</strong></p>
+    <button type="button" class="notice-dismiss">
+        <span class="screen-reader-text">Dismiss this notice.</span>
+    </button>
+ </div>
+ */

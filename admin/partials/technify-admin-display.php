@@ -16,7 +16,7 @@ $css_enabled   = Tools::get( $options, 'css_enabled', 0 );
 $js_enabled    = Tools::get( $options, 'js_enabled', 0 );
 
 ?>
-<div class="wrap">
+<div id="technify-wrap" class="wrap">
     <div id="poststuff" class="clear">
         <div id="post-body" class="metabox-holder">
             <div id="post-body-content">

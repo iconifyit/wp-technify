@@ -182,7 +182,7 @@ class Compressor {
      * Process JS & CSS files
      */
     public function process_all() {
-        Tools::debug( $this );
+
         $this->process_css();
         $this->process_js();
     }
@@ -356,13 +356,14 @@ class Compressor {
         if (is_dir($file)) return null;
         if (! file_exists($file)) return null;
         if (! is_readable($file)) return null;
-        $str = "";
-        $fp = fopen($file, 'r');
-        if (! $fp) return null;
-        if (filesize($file) > 0) {
-            $str = fread($fp, filesize($file));
-        }
-        return $str;
+        return file_get_contents( $file );
+//        $str = "";
+//        $fp = fopen($file, 'r');
+//        if (! $fp) return null;
+//        if (filesize($file) > 0) {
+//            $str = fread($fp, filesize($file));
+//        }
+//        return $str;
     }
 
     /**

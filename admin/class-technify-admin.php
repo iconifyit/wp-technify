@@ -82,10 +82,13 @@ class Technify_Admin {
      */
     public function add_plugin_admin_menu() {
 
-        add_menu_page( 'Technify Me', 'Technify Me', 'manage_options', $this->plugin_name . '-compressor', array($this, 'display_compressor'));
+        add_menu_page( 'Technify Me', 'Technify Me', 'manage_options', $this->plugin_name . '-settings', array($this, 'show_settings_page') );
     }
 
-    public function display_compressor() {
+    /**
+     * Shows the settings page.
+     */
+    public function show_settings_page() {
         echo $this->apply_admin_theme(null, 'technify-admin-display.php');
     }
 

@@ -75,8 +75,6 @@ class Technify_Public {
         if ( Tools::get( $options, 'js_enabled', 0 ) == 1 ) {
             $this->js_enabled = true;
         }
-
-        # Tools::debug( $this );
 	}
 
 	/**

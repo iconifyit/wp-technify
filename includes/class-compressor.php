@@ -25,6 +25,16 @@ class Compressor {
     var $styles  = array();
 
     /**
+     * @var
+     */
+    var $css_enabled;
+
+    /**
+     * @var
+     */
+    var $js_enabled;
+
+    /**
      * @var array
      */
     var $scripts = array();
@@ -33,8 +43,6 @@ class Compressor {
 
         $this->options = get_option( 'Technify' );
         $this->parse_options();
-
-        # Tools::debug( $this->styles );
     }
 
     /**
@@ -109,6 +117,18 @@ class Compressor {
         foreach ( $this->operations as $op ) {
             $this->scripts[$op] = $this->get_paths( Tools::get( $scripts, $op, array() ) );
         }
+
+        $options = get_option( $this->plugin_name );
+
+        $this->css_enabled = false;
+        if ( Tools::get( $options, 'css_enabled', 0 ) == 1 ) {
+            $this->css_enabled = true;
+        }
+
+        $this->js_enabled = false;
+        if ( Tools::get( $options, 'js_enabled', 0 ) == 1 ) {
+            $this->js_enabled = true;
+        }
     }
 
     /**
@@ -147,12 +167,20 @@ class Compressor {
     /**
      * The public interface for aggregating and compressing CSS code.
      */
-    public function process_css() { $this->process( 'styles' ); }
+    public function process_css() {
+        if ( $this->css_enabled ) {
+            $this->process( 'styles' );
+        }
+    }
 
     /**
      * The public interface for aggregating and compressing JS code.
      */
-    public function process_js() { $this->process( 'scripts' ); }
+    public function process_js() {
+        if ( $this->js_enabled ) {
+            $this->process( 'scripts' );
+        }
+    }
 
     private function direct_path( $file, $asset ) {
 
@@ -165,10 +193,12 @@ class Compressor {
      */
     public function parse_urls( $file, $output ) {
 
-        // ./       = path to the file
-        // null     = path to the file
-        // /        = root url
-        // ../      = directory above file
+        /**
+         * ./ (dot slash)       = replace with path to the file directory
+         * null                 = replace with path to file directory
+         * / (slash)            = replace with URL to web root
+         * ../ (dot dot slash)  = replace with directory above path to the file
+         */
 
         $pattern = '|url\s*\(\s*[\'"]?([^\'"\)]+)[\'"]\s*\)|';
 
@@ -200,12 +230,6 @@ class Compressor {
                 $output = str_replace( $search, $replace, $output );
             }
         }
-//
-//        die( json_encode( array(
-//            'text'  => $output,
-//            'class' => 'notice-info'
-//        )));
-//        exit(0);
         return $output;
     }
 
@@ -214,13 +238,6 @@ class Compressor {
      * @param $type
      */
     private function process( $type ) {
-
-        global $wp_styles;
-        global $wp_scripts;
-
-        //TODO: When aggregating CSS, any url(...) values that use relative paths break.
-        //TODO: Need to process each file individually to add the root path for that file
-        //TODO: to the beginning of any url(...) values.
 
         $option_key = TECH_STYLES_KEY;
         $func_pack  = 'compress';
@@ -238,8 +255,6 @@ class Compressor {
                 foreach ( $this->operations as $op ) {
 
                     $files = Tools::get( $this->$type, $op, array() );
-
-                    # $files = array( '/wp-content/plugins/array-toolkit/includes/css/fonts/fontello/array.css' );
 
                     $files = array_map( 'trim', $files );
 

@@ -7,12 +7,14 @@
  */
 
 try {
+    ob_start("ob_gzhandler");
     $folders         = explode( '/', dirname( __FILE__ ) );
     $plugin_dir      = implode( '/', array_slice( $folders, 0, -2 ) );
 
     require_once( $plugin_dir . "/includes/compressor-base.php" );
     $Compressor = Compressor::singleton();
     $Compressor->js();
+    ob_end_flush();
 }
 catch(Exception $e) {/* Fail gracefully */}
 exit(0);

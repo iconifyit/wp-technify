@@ -60,7 +60,7 @@ class Technify_Admin {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/technify-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-admin-css', plugin_dir_url( __FILE__ ) . 'css/technify-admin.css', array(), $this->version, 'all' );
 	}
 
 	/**
@@ -70,9 +70,9 @@ class Technify_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		# wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-admin.js', array( 'jquery' ), $this->version, false );
-        wp_enqueue_script(  $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-ajax.js', array( 'jquery' ) );
-        wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => '' ) );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/technify-admin.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script(  $this->plugin_name . '-ajax', plugin_dir_url( __FILE__ ) . 'js/technify-ajax.js', array( 'jquery' ) );
+        # wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => '' ) );
 	}
 
     /**
